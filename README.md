@@ -147,8 +147,16 @@ You will see lots of device MAC and Name pairs. Most devices will provide meanin
 
 
 Alternatively you can use DeviceHive REST api or Admin interface to send `scan` command and gateway will reply with the list of found ble devices.
-To use Admin interface, login and go to `Devcies` tab, then click `detail` button on btle_gw device, switch to `commands` tab and click `enter new command`. Enter `scan` as command name, leave parameters empty and click `push'. In about 20 seconds gateway should reply with the list of ble devices and their MAC addresses.
-
+To use Admin interface, login and go to `Devcies` tab, then click `detail` button on btle_gw device, switch to `commands` tab and click `enter new command`. Enter `scan` as command name, leave parameters empty and click `push'. In about 20 seconds gateway should reply with the list of ble devices and their MAC addresses (You may need to click `refresh` to see result):
+```javascript
+{
+	"20:C3:8F:F5:49:B4":"SATECHILED-0",
+	"30:8C:FB:5A:7A:F7":"(unknown)",
+	"F4:F9:51:D2:3F:71":"(unknown)",
+	"F9:8A:AD:01:CA:71":"W Activite 7D"
+}
+```
+In this example `20:C3:8F:F5:49:B4` is a MAC address of Bluetooth led bulb from SATECHI and `F9:8A:AD:01:CA:71` is my Withings Activite watch.
 
 ##  <a name="examples"></a>5. BLE Automation Examples
 ### <a name="purifier"></a>5.1 Automating Honeywell Air Purifier
