@@ -14,7 +14,7 @@ This tutorial will guide you through the following steps to automate use of BLE 
   * [Automating SATECHI LED Bluetooth lamp](#bulb)
 
 ##  <a name="firmware"></a>1. Flashing openwrt firmware with DH BLE
-DeviceHive is available on many [platforms and languages](http://devicehive.com/documentation) but for this tutorial we will be using a precompiled firmware for openwrt enabled router [DIR-505L](http://goo.gl/v0tJG9) that includes DeviceHive BLE router.
+DeviceHive is available on many [platforms and languages](http://devicehive.com/documentation) but for this tutorial we will be using a precompiled firmware for openwrt enabled router [DIR-505L](http://goo.gl/v0tJG9) that includes DeviceHive BLE router. You will also need a Bluetooth Low Energy USB Dongle to use with this router, like [this one](http://goo.gl/CtnIyd) for example. 
 
 Download [firmware file](https://drive.google.com/file/d/0B9Db_guVlBYjSlpybW1uRUszeE0). It has 2 files and a sources folder included.
 
@@ -50,7 +50,7 @@ Authorization: Bearer 7Dy4Bcqz+eRjax29lFxFyz8GxvGQxA3N4xfzon4/97o=
 
 This section covers two topics: making sure your router can connect to internet and it can discover and connect to your DeviceHive playground.
 
-### Configure router for internet access
+### Configuring router for internet access
 
 By default provided firmware has WiFi interface disabled and Ethernet acts as DHCP server, available on `192.168.1.1` address. This is useful to connect your computer as a client and manage settings on the router. But for convenience you want to configure wlan interface to connect to the local wifi network.
 To do that, first connect  to router via telnet as root user:
@@ -113,8 +113,43 @@ config interface wlan
 
 `> reboot`
 
+Confirm that router connected to wifi network in ssh terminal:
+```
+> ifconfig
+...
+> ping devicehive.com
+...
+```
+
+### Connecting to your DeviceHive playground
+
+Now is the time to configure provided DeviceHive BLE Gateway to connect to your specific playground api. 
+Corresponding settings are located in `/etc/init.d/devicehive-blegw` file.
+Open file in [vim](http://www.radford.edu/~mhtay/CPSC120/VIM_Editor_Commands.htm) editor `vi /etc/init.d/devicehive-blegw` and change **DH_SERVER** property to your api url, ex:
+```
+DH_SERVER=http://xyz.pg.devicehive.com/api
+```
+Make sure, your BLE USB dongle is connected to router and reboot router: 
+```
+> reboot
+```
+After reboot you should see your router in the `Devices` section on the DeviceHive Playground Admin page. It will appear as **btle_gw**.
 
 ##  <a name="discovery"></a>4. Discovering BLE devices
+
+In order to connect to BLE devices you'll need to know their MAC addresses. There are multiple ways to know those addresses. Either looking on the device label if available or using some mobile apps. The easiest way however is to use `hcitool` command on gateway router: 
+```
+> hcitool blescan
+LE Scan ...
+```
+
+You will see lots of device MAC and Name pairs. Most devices will provide meaningful name but some won't so you'll have to guess.
+
+
+Alternatively you can use DeviceHive REST api or Admin interface to send `scan` command and gateway will reply with the list of found ble devices.
+To use Admin interface, login and go to `Devcies` tab, then click `detail` button on btle_gw device, switch to `commands` tab and click `enter new command`. Enter `scan` as command name, leave parameters empty and click `push'. In about 20 seconds gateway should reply with the list of ble devices and their MAC addresses.
+
+
 ##  <a name="examples"></a>5. BLE Automation Examples
 ### <a name="purifier"></a>5.1 Automating Honeywell Air Purifier
 ### <a name="bulb"></a>5.2 Automating SATECHI LED Bluetooth lamp
