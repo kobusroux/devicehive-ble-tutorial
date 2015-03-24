@@ -147,7 +147,7 @@ You will see lots of device MAC and Name pairs. Most devices will provide meanin
 
 
 Alternatively you can use DeviceHive REST api or Admin interface to send `scan` command and gateway will reply with the list of found ble devices.
-To use Admin interface, login and go to `Devcies` tab, then click `detail` button on btle_gw device, switch to `commands` tab and click `enter new command`. Enter `scan` as command name, leave parameters empty and click `push'. In about 20 seconds gateway should reply with the list of ble devices and their MAC addresses (You may need to click `refresh` to see result):
+To use Admin interface, login and go to `Devcies` tab, then click `detail` button on btle_gw device, switch to `commands` tab and click `enter new command`. Enter `scan` as command name, leave parameters empty and click `push`. In about 20 seconds gateway should reply with the list of ble devices and their MAC addresses (You may need to click `refresh` to see result):
 ```javascript
 {
 	"20:C3:8F:F5:49:B4":"SATECHILED-0",
