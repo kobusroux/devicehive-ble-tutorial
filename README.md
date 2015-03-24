@@ -20,13 +20,32 @@ Download [firmware file](https://drive.google.com/file/d/0B9Db_guVlBYjSlpybW1uRU
 
 **openwrt-ar71xx-generic-dir-505-a1-squashfs-factory.bin** - should be used to flash firmware over the factory d-liunk image. See [openwrt page](http://wiki.openwrt.org/toh/d-link/dir-505#debricking) for instructions.
 
-**openwrt-ar71xx-generic-dir-505-a1-squashfs-sysupgrade.bin ** - should be used to flash firmware over the existing openwrt image. See [openwrt page](http://wiki.openwrt.org/doc/howto/generic.sysupgrade) for instructions.
+**openwrt-ar71xx-generic-dir-505-a1-squashfs-sysupgrade.bin** - should be used to flash firmware over the existing openwrt image. See [openwrt page](http://wiki.openwrt.org/doc/howto/generic.sysupgrade) for instructions.
 
-If you have other openwrt image that you want to include DeviceHive gateway, you can try to build your own image using **/src** folder. This is however beyond current tutorial. 
+*If you have other openwrt image that you want to include DeviceHive gateway, you can try to build your own image using **/src** folder. This is however beyond current tutorial.*
 
 Once you've flashed firmware, switch router toggle to `Router` position. You should be able to connect to router using Ethernet cable as it acts as a router and has build it DHCP server. 
 
 ##  <a name="playground"></a>2. Creating DeviceHive playground account
+
+To control your gateway and devices device over the internet you will need DeviceHive server instance to be hosted on some server on in the cloud. DeviceHive.com conveniently provides development playgrounds for free so you can start developing in minutes. Go to  [Playground](http://devicehive.com/user/register) page and sign up for a new account. You can use GitHub, Facebook or Google sign in options for faster process. 
+
+Once you follow signup process you will be presented with pair of urls:
+```
+Admin Url: 
+http://xyz.pg.devicehive.com/admin
+API Url: 
+http://xyz.pg.devicehive.com/api
+```
+
+Use those for server api url later and to see/manage your devices online using **admin link**. You need that one to **issue access token** for api access. To generate one please follow admin link and sign in using your credentials or github/facebook/google account. 
+On the DeviceHive Admin interface click `Access Keys` tab and then `create new access key` button. 
+Enter any value into `label` field, for example *RESTKEY*, leave Type=Default  and click `Save`.
+You will see a new key appear in the list. Use the Key value for Authorization header for the REST calls, example:
+```
+Authorization: Bearer 7Dy4Bcqz+eRjax29lFxFyz8GxvGQxA3N4xfzon4/97o=
+``` 
+
 ##  <a name="configure"></a>3. Configuring gateway to connect to DH server
 ##  <a name="discovery"></a>4. Discovering BLE devices
 ##  <a name="examples"></a>5. BLE Automation Examples
