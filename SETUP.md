@@ -13,13 +13,13 @@ DeviceHive is available on many [platforms and languages](http://devicehive.com/
 
 Download [firmware file](https://drive.google.com/file/d/0B9Db_guVlBYjSlpybW1uRUszeE0). It has 2 files and a sources folder included.
 
-**openwrt-ar71xx-generic-dir-505-a1-squashfs-factory.bin** - should be used to flash firmware over the factory d-liunk image. See [openwrt page](http://wiki.openwrt.org/toh/d-link/dir-505#debricking) for instructions.
+**openwrt-ar71xx-generic-dir-505-a1-squashfs-factory.bin** - should be used to flash firmware over the factory d-link image. See [openwrt page](http://wiki.openwrt.org/toh/d-link/dir-505#debricking) for instructions.
 
 **openwrt-ar71xx-generic-dir-505-a1-squashfs-sysupgrade.bin** - should be used to flash firmware over the existing openwrt image. See [openwrt page](http://wiki.openwrt.org/doc/howto/generic.sysupgrade) for instructions.
 
 *If you have other openwrt image that you want to include DeviceHive gateway, you can try to build your own image using **/src** folder. This is however beyond current tutorial.*
 
-Once you've flashed firmware, switch router toggle to `Router` position. You should be able to connect to router using Ethernet cable as it acts as a router and has build it DHCP server. 
+Once you've flashed firmware, switch router toggle to `Router` position. You should be able to connect to router using Ethernet cable as it acts as a router and has built-in DHCP server. 
 
 ##  <a name="playground"></a>2. Creating DeviceHive playground account
 
@@ -142,7 +142,7 @@ You will see lots of device MAC and Name pairs. Most devices will provide meanin
 
 
 Alternatively you can use DeviceHive REST api or Admin interface to send `scan` command and gateway will reply with the list of found ble devices.
-To use Admin interface, login and go to `Devcies` tab, then click `detail` button on btle_gw device, switch to `commands` tab and click `enter new command`. Enter `scan` as command name, leave parameters empty and click `push`. In about 20 seconds gateway should reply with the list of ble devices and their MAC addresses (You may need to click `refresh` to see result):
+To use Admin interface, login and go to `Devices` tab, then click `detail` button on btle_gw device, switch to `commands` tab and click `enter new command`. Enter `scan` as command name, leave parameters empty and click `push`. In about 20 seconds gateway should reply with the list of ble devices and their MAC addresses (You may need to click `refresh` to see result):
 ```javascript
 {
 	"20:C3:8F:F5:49:B4":"SATECHILED-0",
