@@ -18,7 +18,7 @@ These are short instructions to start (*for more details look [here](SETUP.md).*
 
 This example demonstrates how to control BLE enabled air purifier [Honeywell HPA250B](http://www.honeywellcleanair.com/air-purifiers/bluetooth/) from the web page via DeviceHive cloud.
 
-Simply open provided example `examples/purifier.html` or [jsFiddle](http://jsfiddle.net/demon_xxi/p308fap6/1/) and change configurartion parameters with your values:
+Simply open provided example `examples/purifier.html` or [jsFiddle](http://jsfiddle.net/demon_xxi/p308fap6/2/) and change configurartion parameters with your values:
 
 ```javascript
     // DeviceHive server api url, ex: http://xyz.pg.devicehive.com/api

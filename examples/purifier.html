@@ -157,13 +157,13 @@ myApp.controller('ButtonsCtrl', function ($http, $timeout) {
     
     this.init_device = function(){
         if (!this.device || !this.device.mac) return;
-        dh_cmd_write(this.device.mac, purifierHandle, purInitValue).
+        dh_cmd_write(ctl.device.mac, purifierHandle, purInitValue).
         success(log).error(log);        
     };
 
     // send power on/off toggle command
     this.toggle = function () {
-        dh_cmd_write(DEVICE_MAC, purifierHandle, purToggleValue).
+        dh_cmd_write(ctl.device.mac, purifierHandle, purToggleValue).
         success(log).error(log);
     };
 
