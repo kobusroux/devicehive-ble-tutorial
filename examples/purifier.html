@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,6 +20,47 @@
     .btn-lg .glyphicon {
     font-size: 96px;
 }
+
+.gly-spin {
+  -webkit-animation: spin 2s infinite linear;
+  -moz-animation: spin 2s infinite linear;
+  -o-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+}
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+  }
+}
+@-o-keyframes spin {
+  0% {
+    -o-transform: rotate(0deg);
+  }
+  100% {
+    -o-transform: rotate(359deg);
+  }
+}
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
   </style>
   
 
@@ -27,8 +69,10 @@
 
 var myApp = angular.module('myApp', []);
 
-myApp.controller('ButtonsCtrl', function ($http) {
+myApp.controller('ButtonsCtrl', function ($http, $timeout) {
 
+    var ctl = this;
+    
     // *** constants to configure ***
 
     // DeviceHive server api url, ex: http://xyz.pg.devicehive.com/api
@@ -40,6 +84,9 @@ myApp.controller('ButtonsCtrl', function ($http) {
     // MAC address of BLE device
     var DEVICE_MAC = '1C:BA:8C:23:19:98';
 
+    this.device = null;
+    this.devices = [];
+    this.loading_devices = false;
 
 
     // *** device hive rest command ***
@@ -51,33 +98,73 @@ myApp.controller('ButtonsCtrl', function ($http) {
     var purToggleValue = "a501008d13000000000000000000000000000000";
 
     $http.defaults.headers.common.Authorization = AUTH_TOKEN;
-    var log = function (args) {
-        console.log(args);
+   
+    var log = function(args){console.log(args);};
+    var logger = function (promise) {
+        promise.success(log).error(log);
     };
 
     // REST call to DeviceHive server
-    var dh_command = function (device, handle, value) {
-        console.log(device, handle, value);
+    var dh_cmd = function (command, params) {
+        console.log(command, params);
 
-        $http.post(DEVICE_HIVE_API + path, {
-            "command": "xgatt/write",
-                "parameters": {
+        return $http.post(DEVICE_HIVE_API + path, {
+            "command": command, "parameters": params
+        });
+    };
+    
+    var dh_cmd_write = function (device, handle, value) {     
+        return dh_cmd("xgatt/write", {
                 "device": device,
-                    "handle": handle,
-                    "value": value
+                "handle": handle,
+                "value": value
+            });  
+    };
+    
+    
+    this.check_scan = function(id){
+        console.log(DEVICE_HIVE_API + path + '/' + id);
+        $http.get(DEVICE_HIVE_API + path + '/' + id).error(function(err){
+            console.log(err);
+            ctl.loading_devices = false;
+        }).
+        success(function(data){
+            console.log(data);
+            if (data && data.result) {
+                var list = [];
+                angular.forEach(data.result, function(value, key) {
+                    this.push({mac: key, name: value + ' - ' + key});
+                }, list);
+                ctl.devices = list;
+                ctl.loading_devices = false;
+            } else {
+                $timeout(function(){ctl.check_scan(id)}, 5000);
             }
-        }).success(log).error(log);
-
+        });
     };
 
+    this.scan_devices = function(){
+        dh_cmd('scan').
+        success(function(data){
+            var id = data.id;
+            ctl.loading_devices = true;
+            $timeout(function(){ctl.check_scan(id)}, 5000);
+        }).error(log);
+    };
+    
 
     // controlling device from this point
-    // init 
-    dh_command(DEVICE_MAC, purifierHandle, purInitValue);
+    
+    this.init_device = function(){
+        if (!this.device || !this.device.mac) return;
+        dh_cmd_write(this.device.mac, purifierHandle, purInitValue).
+        success(log).error(log);        
+    };
 
     // send power on/off toggle command
     this.toggle = function () {
-        dh_command(DEVICE_MAC, purifierHandle, purToggleValue);
+        dh_cmd_write(DEVICE_MAC, purifierHandle, purToggleValue).
+        success(log).error(log);
     };
 
 });
@@ -88,11 +175,18 @@ myApp.controller('ButtonsCtrl', function ($http) {
 
 </head>
 <body>
-  <div ng-app="myApp" ng-controller="ButtonsCtrl as ctl">
+  <div ng-app="myApp" ng-controller="ButtonsCtrl as ctl" ng-init="ctl.scan_devices()">
+    <dir class="text-center">
+        <label>Device: </label>
+         <select ng-model="ctl.device" ng-options="device.name for device in ctl.devices" ng-change="ctl.init_device()" ng-disabled="ctl.loading_devices">
+          <option value="">-- Choose Device --</option>
+        </select>
+        <i class="btn-link glyphicon glyphicon-refresh" ng-class="{'gly-spin': ctl.loading_devices}" ng-click="ctl.scan_devices()" ng-disabled="ctl.loading_devices"></i>
+    </dir>
     <div class="text-center">
          <h2>Purifier Control</h2>
 
-        <button class="btn btn-lg btn-primary" ng-click="ctl.toggle()">
+        <button class="btn btn-lg btn-primary" ng-click="ctl.toggle()" ng-disabled="ctl.loading_devices">
             <span class="glyphicon glyphicon-off"></span>
         </button>
     </div>
