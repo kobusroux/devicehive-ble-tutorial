@@ -26,9 +26,6 @@ Simply open provided example `examples/purifier.html` or [jsFiddle](http://jsfid
 
     // Authentication token. May be Bearer or Basic scheme
     var AUTH_TOKEN = 'Bearer DgG0lZXdEoei7YWB/O3bf57aDVZCsP2Bw8Hyb3KShwk=';
-
-    // MAC address of BLE device
-    var DEVICE_MAC = '1C:BA:8C:23:19:98';
 ```
 
 You should be able to control your purifier now given everything works as expected :)
