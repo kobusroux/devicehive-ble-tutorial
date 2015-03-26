@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title> - jsFiddle demo by demon_xxi</title>
+  
+  <script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.1/angular.js'></script>
+  
+  
+  
+  
+  <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+  
+    
+      <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    
+  
+  <style type='text/css'>
+    .btn-lg .glyphicon {
+    font-size: 96px;
+}
+  </style>
+  
+
+
+<script type='text/javascript'>//<![CDATA[ 
+
+var myApp = angular.module('myApp', []);
+
+myApp.controller('ButtonsCtrl', function ($http) {
+
+    // *** constants to configure ***
+
+    // DeviceHive server api url, ex: http://xyz.pg.devicehive.com/api
+    var DEVICE_HIVE_API = 'http://nn7975.pg.devicehive.com/api';
+
+    // Authentication token. May be Bearer or Basic scheme
+    var AUTH_TOKEN = 'Bearer DgG0lZXdEoei7YWB/O3bf57aDVZCsP2Bw8Hyb3KShwk=';
+
+    // MAC address of BLE device
+    var DEVICE_MAC = '1C:BA:8C:23:19:98';
+
+
+
+    // *** device hive rest command ***
+    var path = '/device/snappy-demo2/command'
+
+    // *** constants specific for HPA250B purifier ble implementation ***
+    var purifierHandle = 0x25;
+    var purInitValue = "4d41432b1cba8c231998";
+    var purToggleValue = "a501008d13000000000000000000000000000000";
+
+    $http.defaults.headers.common.Authorization = AUTH_TOKEN;
+    var log = function (args) {
+        console.log(args);
+    };
+
+    // REST call to DeviceHive server
+    var dh_command = function (device, handle, value) {
+        console.log(device, handle, value);
+
+        $http.post(DEVICE_HIVE_API + path, {
+            "command": "xgatt/write",
+                "parameters": {
+                "device": device,
+                    "handle": handle,
+                    "value": value
+            }
+        }).success(log).error(log);
+
+    };
+
+
+    // controlling device from this point
+    // init 
+    dh_command(DEVICE_MAC, purifierHandle, purInitValue);
+
+    // send power on/off toggle command
+    this.toggle = function () {
+        dh_command(DEVICE_MAC, purifierHandle, purToggleValue);
+    };
+
+});
+//]]>  
+
+</script>
+
+
+</head>
+<body>
+  <div ng-app="myApp" ng-controller="ButtonsCtrl as ctl">
+    <div class="text-center">
+         <h2>Purifier Control</h2>
+
+        <button class="btn btn-lg btn-primary" ng-click="ctl.toggle()">
+            <span class="glyphicon glyphicon-off"></span>
+        </button>
+    </div>
+</div>
+  
+</body>
+
+
+</html>
+
